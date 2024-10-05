@@ -1,0 +1,6 @@
+Wykonane prace dostarczać na maila:
+artur.samojluk@uwm.edu.pl 
+Tytuł maila:
+ProjAppWWW lab 1
+
+Wysłać w mailu link do folderu w repozytorium na github.
