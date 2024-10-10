@@ -6,7 +6,8 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-image: url("../images/background.jpeg");
+  /*background-image: url("../images/background.jpeg");*/
+  background-color: lightblue;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -63,7 +64,7 @@ body {
 
 }
 
-.content, .text {
+.content, .text{
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -126,6 +127,13 @@ label {
   font-weight: bold;
   margin-top: 10px;
 }
+#zegarek, #data {
+  text-align: center;
+  font-size: 1.5em; 
+  margin-top: 20px; 
+  color: #ffffff; 
+}
+
 
 input[type="text"],
 input[type="email"],
