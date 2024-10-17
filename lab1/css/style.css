@@ -200,6 +200,8 @@ footer {
   text-decoration: underline;
 }
 
+
+
 @media (max-width: 768px) {
   .navbar a {
     font-size: 1em;
