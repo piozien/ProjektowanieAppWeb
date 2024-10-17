@@ -5,27 +5,18 @@
     <meta http-equiv="Content-Language" content="pl" />
     <meta name="Author" content="Piotr Zienowicz" />
     <title>Historia lotów kosmicznych</title>
-    <link rel="stylesheet" href="../css/style2.css" />
-    <script src="../jquery/jQuery3.7.1.js"></script>
-    <script src="../javascript/kolorujtlo.js" type="text/javascript"></script>
-    <script src="../javascript/timedate.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="css/style2.css" />
+    <script src="jquery/jQuery3.7.1.js"></script>
+    <script src="javascript/kolorujtlo.js" type="text/javascript"></script>
+    <script src="javascript/timedate.js" type="text/javascript"></script>
   </head>
   <body onload="startclock()">
     <div class="header">
       <h1 class="body-title">HISTORIA LOTÓW KOSMICZNYCH</h1>
     </div>
 
-    <div class="navbar">
-      <ul>
-        <li><a href="index.html">STRONA GŁÓWNA</a></li>
-        <li><a href="first.html">PIERWSZY LOT W KOSMOS</a></li>
-        <li><a href="orbit.html">PIERWSZY LOT ORBITALNY</a></li>
-        <li><a href="human.html">CZŁOWIEK W KOSMOSIE</a></li>
-        <li><a href="łajka.html">PSI ASTRONAUTA</a></li>
-        <li><a href="moon.html">KSIĘŻYC</a></li>
-        <li><a href="lab2.html">ĆWICZENIA 2 - JS</a></li>
-        <li><a href="contact.html">KONTAKT</a></li>
-      </ul>
+    <?php include('php/website/navbar.php'); ?>
+    
       <section class="content">
         <form method="POST" name="background">
           <input
@@ -99,16 +90,9 @@
       </div>
     </div>
 
-    <footer>
-      <div class="footer-content">
-        <p>&copy; 2024 Piotr Zienowicz, 169399, ISI4.</p>
-        <ul class="footer-links">
-          <li><a href="contact.html">Kontakt</a></li>
-        </ul>
-      </div>
-    </footer>
-    <script src="../javascript/scriptAnimacja.js"></script>
-    <script src="../javascript/scriptAnimacja2.js"></script>
-    <script src="../javascript/scriptAnimacja3.js"></script>
+    <?php include('php/website/footer.php'); ?>
+    <script src="javascript/scriptAnimacja.js"></script>
+    <script src="javascript/scriptAnimacja2.js"></script>
+    <script src="javascript/scriptAnimacja3.js"></script>
   </body>
 </html>
