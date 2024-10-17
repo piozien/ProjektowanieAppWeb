@@ -12,18 +12,7 @@
       <h1 class="body-title">PIES W PRZESTRZENI</h1>
     </div>
 
-    <div class="navbar">
-      <ul>
-        <li><a href="index.html">STRONA GŁÓWNA</a></li>
-        <li><a href="first.html">PIERWSZY LOT W KOSMOS</a></li>
-        <li><a href="orbit.html">PIERWSZY LOT ORBITALNY</a></li>
-        <li><a href="human.html">CZŁOWIEK W KOSMOSIE</a></li>
-        <li><a href="łajka.html">PSI ASTRONAUTA</a></li>
-        <li><a href="moon.html">KSIĘŻYC</a></li>
-        <li><a href="lab2.html">ĆWICZENIA 2 - JS</a></li>
-        <li><a href="contact.html">KONTAKT</a></li>
-      </ul>
-    </div>
+    <?php include('../stronaWWW/php/website/navbar.php'); ?>
     <div class="content">
       <h2>Psi astronauta</h2>
 
@@ -62,13 +51,6 @@
         </p>
       </div>
     </div>
-    <footer>
-      <div class="footer-content">
-        <p>&copy; 2024 Piotr Zienowicz, 169399, ISI4.</p>
-        <ul class="footer-links">
-          <li><a href="contact.html">Kontakt</a></li>
-        </ul>
-      </div>
-    </footer>
+    <?php include('../stronaWWW/php/website/footer.php'); ?>
   </body>
 </html>
