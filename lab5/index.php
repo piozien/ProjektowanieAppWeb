@@ -63,7 +63,7 @@ if ($_GET['idp'] == '') {
         <li><a href="index.php?idp=podstrona4">PSI ASTRONAUTA</a></li>
         <li><a href="index.php?idp=podstrona5">KSIĘŻYC</a></li>
         <li><a href="index.php?idp=podstrona6">ĆWICZENIA 2 - JS</a></li>
-        <li><a href="index.php?idp=podstrona7">Filmy</a></li>
+        <li><a href="index.php?idp=podstrona7">FILMY</a></li>
         <li><a href="index.php?idp=kontakt">KONTAKT</a></li>
     </ul>
 </div>
