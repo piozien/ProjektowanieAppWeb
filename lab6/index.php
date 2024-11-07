@@ -6,12 +6,16 @@
     <meta name="Author" content="Piotr Zienowicz" />
     <title>Historia lotów kosmicznych</title>
     <?php
+    include('cfg.php');
+
     // Ładowanie odpowiednich arkuszy stylów
     if ($_GET['idp'] == 'podstrona6') {
-        echo '<link rel="stylesheet" href="css/style2.css" />'; // Załaduj style2.css dla lab2
+        echo '<link rel="stylesheet" href="css/style2.css" />'; //lab2
     } else {
-        echo '<link rel="stylesheet" href="css/style.css" />'; // Domyślnie ładuj style.css
+        echo '<link rel="stylesheet" href="css/style.css" />'; //reszta
     }
+   
+    
     ?>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="javascript/kolorujtlo.js" type="text/javascript"></script>
@@ -22,33 +26,6 @@
 
 </head>
 <body onload="startclock()">
-
-<?php
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-
-/* Ustawienie domyślnej strony */
-if ($_GET['idp'] == '') {
-    $strona = 'html/glowna.html';
-} elseif ($_GET['idp'] == 'podstrona1') {
-    $strona = 'html/first.html';
-} elseif ($_GET['idp'] == 'podstrona2') {
-    $strona = 'html/orbit.html';
-} elseif ($_GET['idp'] == 'podstrona3') {
-    $strona = 'html/human.html';
-} elseif ($_GET['idp'] == 'podstrona4') {
-    $strona = 'html/lajka.html';
-} elseif ($_GET['idp'] == 'podstrona5') {
-    $strona = 'html/moon.html';
-} elseif ($_GET['idp'] == 'podstrona6') {
-    $strona = 'html/lab2.html'; // Ładowanie lab2.html dla podstrony 6
-} elseif ($_GET['idp'] == 'podstrona7') {
-    $strona = 'html/filmy.html'; 
-} elseif ($_GET['idp'] == 'kontakt') {
-    $strona = 'html/contact.html';
-} else {
-    $strona = 'html/404.html';  // Plik z informacją o błędzie 
-}
-?>
 
 <div class="header">
     <h1 class="body-title">HISTORIA LOTÓW KOSMICZNYCH</h1>
@@ -68,12 +45,13 @@ if ($_GET['idp'] == '') {
     </ul>
 </div>
 
+
 <div class="content">
     <?php
-    if (file_exists($strona)) {
-        include($strona);
+    if (isset($_GET['idp']) && $_GET['idp'] !== '') {
+        include('showpage.php'); 
     } else {
-        echo 'Przepraszamy, nie znaleziono strony.';
+        include('html/glowna.html'); // Domyślny plik
     }
     ?>
 </div>
