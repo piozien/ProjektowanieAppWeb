@@ -8,6 +8,10 @@
     <?php
     include('cfg.php');
 
+    if (!isset($_GET['idp'])) {
+        $_GET['idp'] = 'glowna';
+    }
+
     // Ładowanie odpowiednich arkuszy stylów
     if ($_GET['idp'] == 'podstrona6') {
         echo '<link rel="stylesheet" href="css/style2.css" />'; //lab2
@@ -33,7 +37,7 @@
 
 <div class="navbar">
     <ul>
-        <li><a href="index.php?idp=">STRONA GŁÓWNA</a></li>
+        <li><a href="index.php?idp=glowna">STRONA GŁÓWNA</a></li>
         <li><a href="index.php?idp=podstrona1">PIERWSZY LOT W KOSMOS</a></li>
         <li><a href="index.php?idp=podstrona2">PIERWSZY LOT ORBITALNY</a></li>
         <li><a href="index.php?idp=podstrona3">CZŁOWIEK W KOSMOSIE</a></li>
@@ -50,9 +54,7 @@
     <?php
     if (isset($_GET['idp']) && $_GET['idp'] !== '') {
         include('showpage.php'); 
-    } else {
-        include('html/glowna.html'); // Domyślny plik
-    }
+    } 
     ?>
 </div>
 
