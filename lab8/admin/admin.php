@@ -127,7 +127,7 @@ class Admin
             echo '<h3 class="h3-admin">Dodaj nową stronę</h3>';
 
             // sprawdzenie czy formularz jest wysłany metoda POST i czy wymagane dane sa wprowadzone
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_title'], $_POST['create_content'], $_POST['create_active'], $_POST['create_alias'])) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_title'], $_POST['create_content'], $_POST['create_alias'])) {
                 // Przygotowanie danych do wstawienia do bazy w odpowiednie miejsce
                 // wykorzystuje tutaj real_escape_string który zabezpiecza przed SQL Injection
                 $title = $GLOBALS['conn']->real_escape_string($_POST['create_title']);
@@ -195,7 +195,7 @@ class Admin
             if (isset($_GET['ide'])) {
 
                 // sprawdzenie czy formularz jest wysłany metoda POST i czy wymagane dane sa wprowadzone
-                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_title'], $_POST['edit_content'], $_POST['edit_active'], $_POST['edit_alias'])) {
+                if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_title'], $_POST['edit_content'], $_POST['edit_alias'])) {
                     // przygotwanie danych do zmiany: tytuł, zawartość, aktywność, alias lub id, zachowanie bezpieczenstwa po przez real_escape_string lub intval
                     $title = $GLOBALS['conn']->real_escape_string($_POST['edit_title']);
                     $content = $GLOBALS['conn']->real_escape_string($_POST['edit_content']);
