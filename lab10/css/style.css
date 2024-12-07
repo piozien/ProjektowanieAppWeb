@@ -661,41 +661,69 @@ footer {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.category-tree-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 .category-tree-item {
     padding: 8px 0;
-    margin-left: 20px;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
     transition: all 0.3s ease;
 }
 
-.category-tree-item:hover {
-    border-left-color: #3498db;
+.category-node {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
     background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* Category Actions */
-.category-actions {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.new-category-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #27ae60;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
+    border-radius: 4px;
+    margin: 4px 0;
     transition: all 0.3s ease;
-    border: 1px solid #229954;
-    font-weight: 500;
-    margin: 10px auto;
 }
 
-.new-category-btn:hover {
-    background-color: #2ecc71;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.category-node:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.category-node i {
+    margin-right: 10px;
+    color: #3498db;
+}
+
+.category-name {
+    color: #fff;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.category-id {
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+/* Form Select Styles */
+.form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #34495e;
+    border-radius: 5px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.form-select option {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 8px;
 }
 
 /* Admin Navbar Styles */
@@ -738,7 +766,6 @@ footer {
     font-weight: 600;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 10px;
     transition: background-color 0.3s ease, color 0.3s ease;
     padding: 8px 16px;
@@ -1028,4 +1055,85 @@ body.admin-logged-in .admin-toggle {
     background: linear-gradient(90deg, #2980b9, #3498db);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.error-message {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left: 4px solid #e74c3c;
+    color: #ffffff;
+    padding: 15px 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-start;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-message i {
+    color: #e74c3c;
+    margin-right: 15px;
+    font-size: 1.5em;
+    margin-top: 2px;
+}
+
+.error-message .error-content {
+    flex: 1;
+}
+
+.error-message strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #e74c3c;
+}
+
+.error-message br {
+    margin-bottom: 5px;
+}
+
+.category-actions {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.new-category-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #27ae60;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    border: 1px solid #229954;
+    font-weight: 500;
+    margin: 10px auto;
+}
+
+.new-category-btn:hover {
+    background-color: #2ecc71;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Przycisk powrotu w komunikacie błędu */
+.error-message .action-button {
+    display: inline-block;
+    background-color: #3498db;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.error-message .action-button:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+}
+
+.error-message br {
+    display: block;
+    margin: 5px 0;
+    content: "";
 }
