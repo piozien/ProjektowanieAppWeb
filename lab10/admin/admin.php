@@ -71,7 +71,10 @@ class Admin
             $_SESSION['loggedin'] = true; // Ustawienie zmiennej sesyjnej na true
             return 1; // Pomyślne sprawdzenie
         } else {
-            echo "Logowanie się nie powiodło.";
+            echo '<div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                Nieprawidłowy login lub hasło. Spróbuj ponownie.
+              </div>';
             return 0; // Niepoprawne dane
         }
     }

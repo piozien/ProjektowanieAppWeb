@@ -1,172 +1,525 @@
+.contact-button,
+.password-recovery-button {
+    display: inline-block;
+    width: auto;
+    min-width: 150px;
+    padding: 12px 24px;
+    background-color: #4CAF50;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.contact-button:hover,
+.password-recovery-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Formularz odzyskiwania hasła */
+.form_email {
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: rgba(0, 0, 40, 0.7);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form_passrecov input[type="text"],
+.form_passrecov input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background-color: rgba(40, 40, 100, 0.7);
+    color: #d0d0e1;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form_passrecov input[type="text"]:focus,
+.form_passrecov input[type="email"]:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+.form_passrecov label {
+    color: #d0d0e1;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+/* Resetowanie stylów */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+/* Podstawowe style */
 body {
-  font-family: Arial, sans-serif;
-  background-image: url("../images/background.jpeg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  color: #d0d0e1;
-  line-height: 1.6;
+    font-family: Arial, sans-serif;
+    background-image: url("../images/background.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #d0d0e1;
+    line-height: 1.6;
 }
 
+/* Panel logowania */
+.logowanie {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.logowanie form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.logowanie input[type="text"],
+.logowanie input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.logowanie input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.logowanie input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Panel administratora */
+.admin-panel {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 40, 0.7);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.h3-admin {
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.admin-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.admin-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.admin-link:hover {
+    background-color: #2980b9;
+    text-decoration: none;
+}
+
+/* Tabela administratora */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: rgba(20, 20, 60, 0.7);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #d0d0e1;
+}
+
+.admin-table th {
+    background-color: rgba(40, 40, 100, 0.7);
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.admin-table tr:hover {
+    background-color: rgba(60, 60, 120, 0.3);
+}
+
+.admin-table .id-cell {
+    width: 80px;
+    text-align: center;
+}
+
+.admin-table .action-cell {
+    width: 200px;
+    text-align: center;
+}
+
+/* Przyciski akcji */
+.action-button {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 0 5px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.action-button.edit {
+    background-color: #3498db;
+}
+
+.action-button.edit:hover {
+    background-color: #2980b9;
+}
+
+.action-button.delete {
+    background-color: #e74c3c;
+}
+
+.action-button.delete:hover {
+    background-color: #c0392b;
+}
+
+/* Panel kategorii */
+.category-panel {
+    background-color: rgba(0, 0, 40, 0.7);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+.category-actions {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.new-category-btn {
+    background-color: #2ecc71;
+    color: #fff;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.new-category-btn:hover {
+    background-color: #27ae60;
+    text-decoration: none;
+    color: #fff;
+}
+
+/* Drzewo kategorii */
+.category-tree {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: rgba(20, 20, 60, 0.7);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-tree h3 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.category-tree-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.category-tree-item {
+    margin: 10px 0;
+}
+
+.category-node {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.category-node:hover {
+    background-color: rgba(40, 40, 100, 0.7);
+}
+
+.category-name {
+    font-weight: 500;
+    color: #d0d0e1;
+}
+
+.category-id {
+    color: #a0a0c0;
+    font-size: 0.9em;
+}
+
+/* Formularze edycji */
+.edit-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 40, 0.7);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.edit-title {
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #d0d0e1;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-select {
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: rgba(40, 40, 100, 0.7);
+    color: #ffffff;
+}
+
+.submit-button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+
+/* Nagłówek strony */
 header {
-  text-align: center;
-  padding: 40px 20px;
-  background-color: rgba(10, 10, 40, 0.8);
-  color: #ffffff;
+    text-align: center;
+    padding: 40px 20px;
+    background-color: rgba(10, 10, 40, 0.8);
+    color: #ffffff;
 }
 
-.h3-admin{
-  padding-bottom: 10px;
-  text-align: center;
-  color: #ffffff;
-}
-
-.body-title {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-  text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
-}
-
+/* Nawigacja */
 nav {
-  text-align: center;
-  background-color: rgba(20, 20, 60, 0.9);
-  padding: 10px 0;
-  margin-bottom: 50px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    background-color: rgba(20, 20, 60, 0.9);
+    padding: 10px 0;
+    margin-bottom: 50px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 nav ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 nav li {
-  margin: 0 15px;
+    margin: 0 15px;
 }
 
 nav a {
-  color: #c3e0ff;
-  text-decoration: none;
-  font-size: 1.2em;
-  padding: 8px 16px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+    color: #c3e0ff;
+    text-decoration: none;
+    font-size: 1.2em;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 nav a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
 }
 
+/* Zawartość strony */
 .content {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: rgba(0, 0, 40, 0.7);
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.6);
-  margin-top: 80px;
-  margin-bottom: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 40, 0.7);
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.6);
+    margin-top: 80px;
+    margin-bottom: 40px;
 }
 
+/* Obrazki */
 .float-image {
-  display: block;
-  margin: 15px auto;
-  max-width: 30%;
-  height: auto;
-  border-radius: 5px;
+    display: block;
+    margin: 15px auto;
+    max-width: 30%;
+    height: auto;
+    border-radius: 5px;
 }
 
 .float-imagel {
-  float: left;
-  margin: auto 15px;
-  max-width: 200px;
-  height: auto;
-  border-radius: 5px;
+    float: left;
+    margin: auto 15px;
+    max-width: 200px;
+    height: auto;
+    border-radius: 5px;
 }
 
 .float-imager {
-  float: right;
-  margin: 15px auto;
-  max-width: 200px;
-  height: auto;
-  border-radius: 5px;
+    float: right;
+    margin: 15px auto;
+    max-width: 200px;
+    height: auto;
+    border-radius: 5px;
 }
 
+/* Tekst */
 p {
-  font-size: 1.2em;
-  margin-bottom: 20px;
+    font-size: 1.2em;
+    margin-bottom: 20px;
 }
 
 .p2 {
-  font-size: 1.2em;
-  margin-top: 90px;
-  margin-bottom: 20px;
+    font-size: 1.2em;
+    margin-top: 90px;
+    margin-bottom: 20px;
 }
 
 .name {
-  font-size: 1.3em;
-  font-weight: bold;
-  color: #FFD700;
-  list-style: none;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #FFD700;
+    list-style: none;
 }
 
+/* IFrame */
 .iframe-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .centered-iframe {
-  width: 500px;
-  height: 315px;
+    width: 500px;
+    height: 315px;
 }
 
+/* Etykiety */
 label {
-  font-weight: bold;
-  margin-top: 10px;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
+/* Pola tekstowe */
 input[type="text"],
 input[type="email"],
 textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #2c3e50; 
-  color: #ecf0f1; 
-  font-size: 16px; 
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #2c3e50; 
+    color: #ecf0f1; 
+    font-size: 16px; 
 }
 
 textarea::placeholder {
-  color: #bdc3c7; 
+    color: #bdc3c7; 
 }
 
+/* Przyciski */
 button {
-  padding: 10px 15px;
-  background-color: #0056b3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    padding: 10px 15px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 button:hover {
-  background-color: #004494;
+    background-color: #004494;
 }
 
+/* Tabela administratora */
 .admin-table {
     width: 100%;
     max-width: 1200px;
@@ -254,6 +607,7 @@ button:hover {
     background-color: #c9302c;
 }
 
+/* Kontener przycisków */
 .button-container {
     text-align: center;
     margin: 20px 0;
@@ -287,6 +641,21 @@ button:hover {
     background-color: #c9302c;
 }
 
+.create-button {
+    background-color: #27ae60;
+    color: white;
+    border: 1px solid #229954;
+    margin: 20px auto;
+    display: inline-block;
+}
+
+.create-button:hover {
+    background-color: #2ecc71;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Akcje administratora */
 .admin-actions {
     display: flex;
     justify-content: flex-end;
@@ -313,6 +682,7 @@ button:hover {
     box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
 }
 
+/* Linki */
 .logout-container  {
   display: flex;
   justify-content: center; 
@@ -359,6 +729,7 @@ button:hover {
   color: #f0f0f0;
 }
 
+/* Kontener edycji */
 .edit-container, .create-container{
   background-color: rgba(10, 10, 40, 0.9);
   padding: 20px;
@@ -382,147 +753,7 @@ button:hover {
   margin-top: 20px; /* Odstęp od góry */
 }
 
-.contact-button {
-  display: block;
-  width: 100%;
-  max-width: 300px;
-  padding: 10px;
-  background-color: #1527d9;
-  color: #fff;
-  text-decoration: none;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  text-align: center;
-  transition: background-color 0.3s;
-}
-
-.contact-button:hover {
-  background-color: #0f1e8b;
-}
-
-.edit-title, .create-title {
-  color: #FFD700;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.logout{
-  color: red;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group-inline {
-  display: flex;
-  align-items: center;
-}
-
-.form-group-inline label {
-  margin-right: 10px;
-}
-
-label {
-  display: block;
-  color: #c3e0ff;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-input[type="text"],
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  font-size: 16px;
-}
-
-textarea {
-  height: 300px; 
-  resize: vertical;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  font-size: 16px;
-}
-
-textarea::-webkit-scrollbar {
-  width: 12px; 
-}
-
-textarea::-webkit-scrollbar-track {
-  background: #2c3e50; 
-}
-
-textarea::-webkit-scrollbar-thumb {
-  background-color: #3498db; 
-  border-radius: 10px; 
-  border: 2px solid #2c3e50; 
-}
-
-textarea::-webkit-scrollbar-thumb:hover {
-  background-color: #2980b9; 
-}
-
-input[type="checkbox"] {
-  transform: scale(1.2);
-}
-
-.submit-button {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.submit-button:hover {
-  background-color: #45a049;
-}
-
-.alert {
-  background-color: rgb(4, 20, 51);
-  color: white;
-  padding: 15px;
-  margin: 20px 0;
-  border-radius: 10px;
-}
-
-.form_email, .form_passrecov {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.button-recovery {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.button-recovery:hover {
-  background-color: #45a049; /* Kolor tła po najechaniu */
-}
-
+/* Stopka */
 footer {
   background-color: #0a0a24;
   color: white;
@@ -565,7 +796,7 @@ footer {
   text-decoration: underline;
 }
 
-/* Admin Panel Styles */
+/* Panel administratora */
 .admin-links {
     display: flex;
     justify-content: center;
@@ -593,7 +824,7 @@ footer {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Category Management Buttons */
+/* Przyciski akcji */
 .action-cell {
     display: flex;
     gap: 10px;
@@ -649,8 +880,7 @@ footer {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Admin Table Styles */
-/* Category Tree Styling */
+/* Drzewo kategorii */
 .category-tree {
     background-color: rgba(20, 20, 60, 0.7);
     padding: 20px;
@@ -703,7 +933,7 @@ footer {
     font-size: 0.9em;
 }
 
-/* Form Select Styles */
+/* Formularze */
 .form-select {
     width: 100%;
     padding: 10px;
@@ -726,7 +956,7 @@ footer {
     padding: 8px;
 }
 
-/* Admin Navbar Styles */
+/* Nawigacja administratora */
 .admin-navbar {
     position: fixed;
     top: 0;
@@ -823,7 +1053,7 @@ footer {
     color: #ffcccc;
 }
 
-/* Admin Toggle Button */
+/* Przycisk wyświetlania nawigacji */
 .admin-toggle {
     position: fixed;
     top: 20px;
@@ -849,12 +1079,12 @@ footer {
     right: 320px;
 }
 
-/* Pokaż przycisk toggle tylko gdy użytkownik jest zalogowany */
+/* Wyświetlanie przycisku wyświetlania nawigacji tylko dla zalogowanych użytkowników */
 body.admin-logged-in .admin-toggle {
     display: flex;
 }
 
-/* Responsive Admin Navbar */
+/* Responsywność nawigacji administratora */
 @media (max-width: 768px) {
     .admin-nav-container {
         flex-direction: column;
@@ -873,6 +1103,7 @@ body.admin-logged-in .admin-toggle {
     }
 }
 
+/* Responsywność nawigacji */
 @media (max-width: 768px) {
   .navbar a {
     font-size: 1em;
@@ -919,7 +1150,7 @@ body.admin-logged-in .admin-toggle {
   }
 }
 
-/* Główna nawigacja */
+/* Nawigacja główna */
 .main-nav {
     background: linear-gradient(90deg, #0a0a24, #1a1a4d);
     padding: 8px 0;
@@ -972,7 +1203,7 @@ body.admin-logged-in .admin-toggle {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsywność */
+/* Responsywność nawigacji głównej */
 @media (max-width: 768px) {
     .nav-list {
         flex-direction: column;
@@ -1057,6 +1288,7 @@ body.admin-logged-in .admin-toggle {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Komunikaty błędów */
 .error-message {
     background-color: rgba(231, 76, 60, 0.1);
     border-left: 4px solid #e74c3c;
@@ -1091,30 +1323,6 @@ body.admin-logged-in .admin-toggle {
     margin-bottom: 5px;
 }
 
-.category-actions {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.new-category-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #27ae60;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    border: 1px solid #229954;
-    font-weight: 500;
-    margin: 10px auto;
-}
-
-.new-category-btn:hover {
-    background-color: #2ecc71;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
 /* Przycisk powrotu w komunikacie błędu */
 .error-message .action-button {
     display: inline-block;
@@ -1132,8 +1340,70 @@ body.admin-logged-in .admin-toggle {
     text-decoration: none;
 }
 
-.error-message br {
+/* Formularz kontaktowy */
+
+.contact-button,
+.password-recovery-button {
+    display: inline-block;
+    width: auto;
+    min-width: 150px;
+    padding: 12px 24px;
+    background-color: #4CAF50;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.contact-button:hover,
+.password-recovery-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Formularz odzyskiwania hasła */
+.form_passrecov {
+    width: 100%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: rgba(0, 0, 40, 0.7);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form_passrecov input[type="text"],
+.form_passrecov input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background-color: rgba(40, 40, 100, 0.7);
+    color: #d0d0e1;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form_passrecov input[type="text"]:focus,
+.form_passrecov input[type="email"]:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+.form_passrecov label {
+    color: #d0d0e1;
     display: block;
-    margin: 5px 0;
-    content: "";
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 16px;
 }

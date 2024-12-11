@@ -6,7 +6,7 @@ function toggleAdminPanel() {
     toggle.classList.toggle("active");
 }
 
-// Dodaj klasę do body gdy strona się załaduje
+// Dodaje klasę do body gdy strona się załaduje
 document.addEventListener('DOMContentLoaded', function() {
     document.body.classList.add("admin-logged-in");
 });

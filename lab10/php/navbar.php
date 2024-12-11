@@ -76,14 +76,15 @@ function loadNav() {
 function getNavIcon($alias) {
     $icons = [
         'glowna' => 'fas fa-home',
-        'historia' => 'fas fa-history',
-        'misje' => 'fas fa-rocket',
-        'astronauci' => 'fas fa-user-astronaut',
-        'galeria' => 'fas fa-images',
+        'pierwszy' => 'fas fa-rocket',
+        'podstrona2' => 'fas fa-satellite',
+        'podstrona3' => 'fas fa-user-astronaut',
+        'podstrona4' => 'fas fa-dog',
+        'podstrona5' => 'fas fa-moon',
+        'podstrona6' => 'fas fa-tools',
+        'podstrona7' => 'fas fa-video',
         'kontakt' => 'fas fa-envelope',
         'admin' => 'fas fa-user-shield',
-        'kategorie' => 'fas fa-folder',
-        'produkty' => 'fas fa-box',
     ];
     
     return $icons[$alias] ?? 'fas fa-link'; // Domyślna ikona jeśli nie znaleziono

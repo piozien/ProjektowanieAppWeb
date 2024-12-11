@@ -209,8 +209,6 @@
                 echo $Category->DeleteCategory();					// Login do strony administracyjnej  usunięcie wybranej kategorii z bazy danych
                 break;
                     
-           
-
             default:
                 echo PokazStrone($alias);
                 break;

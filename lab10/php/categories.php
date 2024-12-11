@@ -39,7 +39,10 @@ class Category {
         global $conn;
         
         // Przygotowanie bezpiecznego zapytania
-        $query = "SELECT id, matka, nazwa FROM category_list ORDER BY id ASC LIMIT 100";
+        $query = "SELECT c1.id, c1.matka, c1.nazwa, c2.nazwa as parent_name 
+                 FROM category_list c1 
+                 LEFT JOIN category_list c2 ON c1.matka = c2.id 
+                 ORDER BY c1.matka ASC, c1.id ASC";
         $stmt = $conn->prepare($query);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -61,10 +64,10 @@ class Category {
         while($row = $result->fetch_assoc()) {
             echo '<tr>
                 <td class="id-cell">'.htmlspecialchars($row['id']).'</td>
-                <td>'.htmlspecialchars($row['matka']).'</td>
+                <td>'.(empty($row['parent_name']) ? '-' : htmlspecialchars($row['parent_name'])).'</td>
                 <td>'.htmlspecialchars($row['nazwa']).'</td>
                 <td class="action-cell">
-                    <a href="?idp=edytuj-kategorie&id='.htmlspecialchars($row['id']).'" class="action-button edit">Edytuj</a>
+                    <a href="?idp=edytuj-kategorie&id='.htmlspecialchars($row['id']).'" class="action- edit">Edytuj</a>
                     <a href="?idp=usun-kategorie&id='.htmlspecialchars($row['id']).'" 
                        class="action-button delete" 
                        onclick="return confirm(\'Czy na pewno chcesz usunąć tę kategorię?\');">Usuń</a>
@@ -73,28 +76,43 @@ class Category {
         }
         echo '</table>';
 
-        // Generowanie drzewa kategorii
-        $stmt->execute();
+        // Pobierz wszystkie kategorie dla drzewa
+        $query = "SELECT id, matka, nazwa FROM category_list ORDER BY matka ASC, id ASC";
+        $result = $conn->query($query);
+        
+        // Przygotuj tablicę kategorii
         $categories = [];
-        $tree = [];
-
         while($row = $result->fetch_assoc()) {
-            $categories[$row['id']] = $row;
-            if ($row['matka'] == 0) {
-                $tree[$row['id']] = &$categories[$row['id']];
+            $categories[$row['id']] = [
+                'id' => $row['id'],
+                'nazwa' => $row['nazwa'],
+                'matka' => $row['matka'],
+                'children' => []
+            ];
+        }
+
+        // Buduj drzewo kategorii
+        $tree = [];
+        foreach($categories as $id => &$category) {
+            if($category['matka'] == 0) {
+                $tree[] = &$category;
             } else {
-                $categories[$row['matka']]['children'][] = &$categories[$row['id']];
+                if(isset($categories[$category['matka']])) {
+                    $categories[$category['matka']]['children'][] = &$category;
+                }
             }
         }
 
         echo '<div class="category-tree">';
         echo '<h3>Struktura kategorii</h3>';
-        $this->displayCategoryTree($tree);
+        if(!empty($tree)) {
+            $this->displayCategoryTree($tree);
+        } else {
+            echo '<p>Brak kategorii do wyświetlenia.</p>';
+        }
         echo '</div>';
         
         echo '</div>'; // Zamknięcie category-panel
-
-        $stmt->close();
     }
 
     /**
@@ -202,8 +220,20 @@ class Category {
                 $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 
                 if ($id === false) {
-                    return "Nieprawidłowe ID kategorii.";
+                    return '<div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Nieprawidłowe ID kategorii.
+                    </div>';
                 }
+
+                // Pobierz nazwę kategorii
+                $stmt = $conn->prepare("SELECT nazwa FROM category_list WHERE id = ?");
+                $stmt->bind_param("i", $id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $category = $result->fetch_assoc();
+                $categoryName = $category ? $category['nazwa'] : 'nieznana';
+                $stmt->close();
 
                 // Sprawdzenie czy kategoria nie ma podkategorii
                 $stmt = $conn->prepare("SELECT COUNT(*) as count FROM category_list WHERE matka = ?");
@@ -213,7 +243,14 @@ class Category {
                 $row = $result->fetch_assoc();
 
                 if ($row['count'] > 0) {
-                    return "Nie można usunąć kategorii, która posiada podkategorie.";
+                    return '<div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="error-content">
+                            <strong>Nie można usunąć kategorii "' . htmlspecialchars($categoryName) . '"</strong><br>
+                            Ta kategoria posiada podkategorie. Aby ją usunąć, najpierw usuń lub przenieś wszystkie podkategorie.<br><br>
+                            <a href="?idp=kategorie" class="action-button">Powrót do kategorii</a>
+                        </div>
+                    </div>';
                 }
 
                 // Bezpieczne usuwanie kategorii
@@ -224,7 +261,10 @@ class Category {
                     header("Location: ?idp=kategorie");
                     exit();
                 } else {
-                    return "Błąd podczas usuwania kategorii: " . htmlspecialchars($stmt->error);
+                    return '<div class="error-message">
+                        <i class="fas fa-times-circle"></i>
+                        Błąd podczas usuwania kategorii: ' . htmlspecialchars($stmt->error) . '
+                    </div>';
                 }
                 $stmt->close();
             }
@@ -237,43 +277,76 @@ class Category {
     /**
      * Wyświetla drzewo kategorii
      * 
-     * @param array $category_listTablica kategorii
+     * @param array $categories Tablica kategorii
      * @param int $level Poziom zagłębienia
      * @return void
      */
-    private function displayCategoryTree($category_list, $level = 0) {
-        foreach ($category_list as $category) {
-            echo str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $level);
-            echo htmlspecialchars($category['nazwa']) . '<br>';
+    private function displayCategoryTree($categories, $level = 0) {
+        if (empty($categories)) {
+            return;
+        }
+
+        echo '<ul class="category-tree-list">';
+        foreach ($categories as $category) {
+            $hasChildren = !empty($category['children']);
             
-            if (!empty($category['children'])) {
+            echo '<li class="category-tree-item">';
+            echo '<div class="category-node" style="padding-left: ' . ($level * 20) . 'px;">';
+            echo '<i class="fas ' . ($hasChildren ? 'fa-folder-open' : 'fa-folder') . '"></i> ';
+            echo '<span class="category-name">' . htmlspecialchars($category['nazwa']) . '</span>';
+            echo '<span class="category-id">(ID: ' . htmlspecialchars($category['id']) . ')</span>';
+            echo '</div>';
+            
+            if($hasChildren) {
                 $this->displayCategoryTree($category['children'], $level + 1);
             }
+            echo '</li>';
         }
+        echo '</ul>';
     }
 
     /**
-     * Generuje formularz dodawania kategorii
+     * Generuje formularz dodawania nowej kategorii
      * 
      * @return string HTML formularza
      */
     private function FormularzDodawaniaKategorii() {
-        return '<div class="create-container">
-            <h3 class="create-title">Dodawanie Kategorii</h3>
+        global $conn;
+        
+        // Pobierz wszystkie kategorie dla listy rozwijanej
+        $query = "SELECT id, nazwa FROM category_list ORDER BY nazwa ASC";
+        $result = $conn->query($query);
+        $categories = [];
+        while ($row = $result->fetch_assoc()) {
+            $categories[] = $row;
+        }
+
+        $form = '<div class="edit-container">
+            <h3 class="edit-title">Dodaj Nową Kategorię</h3>
             <form method="post" class="admin-form">
                 <div class="form-group">
                     <label for="nazwa">Nazwa kategorii:</label>
                     <input type="text" id="nazwa" name="nazwa" required />
                 </div>
                 <div class="form-group">
-                    <label for="matka">Kategoria nadrzędna (0 dla głównej):</label>
-                    <input type="number" id="matka" name="matka" value="0" min="0" />
+                    <label for="matka">Kategoria nadrzędna:</label>
+                    <select id="matka" name="matka" class="form-select">
+                        <option value="0">Brak (kategoria główna)</option>';
+        
+        foreach ($categories as $cat) {
+            $form .= '<option value="' . htmlspecialchars($cat['id']) . '">' . 
+                    htmlspecialchars($cat['nazwa']) . '</option>';
+        }
+        
+        $form .= '</select>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="submit-button" value="Dodaj kategorię" />
                 </div>
             </form>
         </div>';
+        
+        return $form;
     }
 
     /**
@@ -290,6 +363,7 @@ class Category {
             return "Nieprawidłowe ID kategorii.";
         }
 
+        // Pobierz dane edytowanej kategorii
         $stmt = $conn->prepare("SELECT * FROM category_list WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -301,7 +375,19 @@ class Category {
             return "Nie znaleziono kategorii.";
         }
 
-        return '<div class="edit-container">
+        // Pobierz wszystkie kategorie dla listy rozwijanej
+        $query = "SELECT id, nazwa FROM category_list WHERE id != ? ORDER BY nazwa ASC";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $categories = [];
+        while ($row = $result->fetch_assoc()) {
+            $categories[] = $row;
+        }
+        $stmt->close();
+
+        $form = '<div class="edit-container">
             <h3 class="edit-title">Edycja Kategorii</h3>
             <form method="post" class="admin-form">
                 <input type="hidden" name="id" value="'.htmlspecialchars($category['id']).'" />
@@ -310,14 +396,25 @@ class Category {
                     <input type="text" id="nazwa" name="nazwa" value="'.htmlspecialchars($category['nazwa']).'" required />
                 </div>
                 <div class="form-group">
-                    <label for="matka">Kategoria nadrzędna (0 dla głównej):</label>
-                    <input type="number" id="matka" name="matka" value="'.htmlspecialchars($category['matka']).'" min="0" />
+                    <label for="matka">Kategoria nadrzędna:</label>
+                    <select id="matka" name="matka" class="form-select">
+                        <option value="0"'.(($category['matka'] == 0) ? ' selected' : '').'>Brak (kategoria główna)</option>';
+        
+        foreach ($categories as $cat) {
+            $form .= '<option value="'.htmlspecialchars($cat['id']).'"'
+                    .(($category['matka'] == $cat['id']) ? ' selected' : '').'>'
+                    .htmlspecialchars($cat['nazwa']).'</option>';
+        }
+        
+        $form .= '</select>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="submit-button" value="Zapisz zmiany" />
                 </div>
             </form>
         </div>';
+        
+        return $form;
     }
 }
 ?>
