@@ -301,7 +301,7 @@ class Product
             $kategoria_id = filter_input(INPUT_POST, 'kategoria', FILTER_VALIDATE_INT);
             $gabaryt = filter_input(INPUT_POST, 'gabaryt_produkty', FILTER_SANITIZE_STRING);
 
-            if (!$tytul || !$cena_netto || !$podatek_vat || !$ilosc || !$kategoria_id || !$gabaryt) {
+            if (!$tytul || !$cena_netto || !$podatek_vat || !isset($ilosc) || !$kategoria_id || !$gabaryt) {
                 echo '<div class="error-message">Wszystkie pola są wymagane!</div>';
                 return;
             }
@@ -442,7 +442,7 @@ class Product
                 <input type="number" id="podatek_vat" name="podatek_vat" step="0.01" value="' . $produkt['podatek_vat'] . '" required>
                 
                 <label for="ilosc_dostepnych">Ilość dostępnych</label>
-                <input type="number" id="ilosc_dostepnych" name="ilosc_dostepnych" value="' . $produkt['ilosc_dostepnych'] . '" required>
+                <input type="number" id="ilosc_dostepnych" name="ilosc_dostepnych" value="' . $produkt['ilosc_dostepnych'] . '">
                 
                 <label for="kategoria">Kategoria</label>
                 <select id="kategoria" name="kategoria" required>
