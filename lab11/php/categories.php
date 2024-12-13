@@ -69,7 +69,7 @@ class Category {
                 <td class="action-cell">
                     <a href="?idp=edytuj-kategorie&id='.htmlspecialchars($row['id']).'" class="action-edit">Edytuj</a>
                     <a href="?idp=usun-kategorie&id='.htmlspecialchars($row['id']).'" 
-                       class="action-button delete" 
+                       class="action-delete" 
                        onclick="return confirm(\'Czy na pewno chcesz usunąć tę kategorię?\');">Usuń</a>
                 </td>
             </tr>';

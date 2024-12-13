@@ -21,10 +21,10 @@
     <meta http-equiv="Content-Language" content="pl" />
     <meta name="Author" content="Piotr Zienowicz" />
     <title>Historia lotów kosmicznych</title>
-    
+
     <!-- Font Awesome dla ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
+
     <!-- JavaScript -->
     <script src="javascript/admin-panel.js" defer></script>
 
@@ -40,13 +40,13 @@
     //---------------------------------//
     
     session_start();
-    
+
     // Regeneracja ID sesji dla bezpieczeństwa
     if (!isset($_SESSION['initialized'])) {
         session_regenerate_id(true);
         $_SESSION['initialized'] = true;
     }
-    
+
     // Ustawienie domyślnej strony
     if (!isset($_GET['idp'])) {
         $_GET['idp'] = 'glowna';
@@ -72,9 +72,9 @@
     // Zarządzanie stylami CSS
     //----------------------------------------
     if (filter_var($_GET['idp'], FILTER_SANITIZE_STRING) === 'podstrona6') {
-        echo '<link rel="stylesheet" href="css/style2.css" />'; 
+        echo '<link rel="stylesheet" href="css/style2.css" />';
     } else {
-        echo '<link rel="stylesheet" href="css/style.css" />'; 
+        echo '<link rel="stylesheet" href="css/style.css" />';
     }
     ?>
 
@@ -91,11 +91,11 @@
     <header>
         <h1 class="body-title">HISTORIA LOTÓW KOSMICZNYCH</h1>
     </header>
-    
+
     <?php
     // Wyświetl navbar admina tylko dla stron administracyjnych
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-        $adminPages = ['admin','edit', 'delete', 'create', 'haslo', 'kategorie', 'edytuj-kategorie', 'nowa-kategoria', 'usun-kategorie', 'produkty', 'nowy-produkt', 'edytuj-produkt', 'usun-produkt'];
+        $adminPages = ['admin', 'edit', 'delete', 'create', 'haslo', 'kategorie', 'edytuj-kategorie', 'nowa-kategoria', 'usun-kategorie', 'produkty', 'nowy-produkt', 'edytuj-produkt', 'usun-produkt'];
         if (in_array($_GET['idp'] ?? '', $adminPages)) {
             echo loadAdminNav();
         }
@@ -127,7 +127,7 @@
 
         // Inicjalizacja instancji Admin
         static $Admin = null;
-        
+
         switch ($alias) {
             case 'kontakt':
                 $contact = new Contact();
@@ -190,46 +190,102 @@
                 echo "<br></br>";
                 break;
 
-             case 'kategorie':
+            case 'kategorie':
+                if ($Admin === null) {
+                    $Admin = new Admin();
+                }
+                if (!isset($_SESSION['loggedin'])) {
+                    header('Location: ?idp=admin');
+                    exit();
+                }
                 $Category = new Category();
                 echo $Category->PokazKategorie(); 					// Login do strony administracyjnej,  wyświetlenie tabeli Kategorii
                 break;
-                    
+
             case 'nowa-kategoria':
+                if ($Admin === null) {
+                    $Admin = new Admin();
+                }
+                if (!isset($_SESSION['loggedin'])) {
+                    header('Location: ?idp=admin');
+                    exit();
+                }
                 $Category = new Category();
                 echo $Category->AddCategory();						// Login do strony administracyjnej  utworzenie nowej kategorii w bazie danych
                 break;
-                    
+
             case 'edytuj-kategorie':
+                if ($Admin === null) {
+                    $Admin = new Admin();
+                }
+                if (!isset($_SESSION['loggedin'])) {
+                    header('Location: ?idp=admin');
+                    exit();
+                }
                 $Category = new Category();
                 echo $Category->EditCategory();						// Login do strony administracyjnej  edycja istniejącej kategorii w bazie danych
                 break;
-                    
+
             case 'usun-kategorie':
+                if ($Admin === null) {
+                    $Admin = new Admin();
+                }
+                if (!isset($_SESSION['loggedin'])) {
+                    header('Location: ?idp=admin');
+                    exit();
+                }
                 $Category = new Category();
                 echo $Category->DeleteCategory();					// Login do strony administracyjnej  usunięcie wybranej kategorii z bazy danych
                 break;
-            
+
             case 'produkty':
+                if ($Admin === null) {
+                    $Admin = new Admin();
+                }
+                if (!isset($_SESSION['loggedin'])) {
+                    header('Location: ?idp=admin');
+                    exit();
+                }
                 $produkty = new Product();
                 $produkty->ListaProduktow();					// Wyświetlenie listy produktów w panelu administracyjnym
                 break;
-                
+
             case 'nowy-produkt':
+                if ($Admin === null) {
+                    $Admin = new Admin();
+                }
+                if (!isset($_SESSION['loggedin'])) {
+                    header('Location: ?idp=admin');
+                    exit();
+                }
                 $produkty = new Product();
                 $produkty->DodajProdukt();					// Wyświetlenie formularza dodawania nowego produktu
                 break;
-                
+
             case 'edytuj-produkt':
+                if ($Admin === null) {
+                    $Admin = new Admin();
+                }
+                if (!isset($_SESSION['loggedin'])) {
+                    header('Location: ?idp=admin');
+                    exit();
+                }
                 $produkty = new Product();
                 $produkty->EdytujProdukt();					// Wyświetlenie formularza edycji wybranego produktu
                 break;
-                
+
             case 'usun-produkt':
+                if ($Admin === null) {
+                    $Admin = new Admin();
+                }
+                if (!isset($_SESSION['loggedin'])) {
+                    header('Location: ?idp=admin');
+                    exit();
+                }
                 $produkty = new Product();
                 $produkty->UsunProdukt();					// Usunięcie wybranego produktu z bazy danych
                 break;
-                    
+
             default:
                 echo PokazStrone($alias);
                 break;
@@ -249,4 +305,5 @@
     </footer>
 
 </body>
+
 </html>

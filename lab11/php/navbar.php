@@ -11,49 +11,50 @@
 //----------------------------------------//
 
 
-function loadNav() {
+function loadNav()
+{
     global $conn;
-    
+
     // Sprawdzenie połączenia z bazą
     if (!$conn) {
         error_log("Błąd połączenia z bazą danych w navbar.php");
         return '<nav><ul><li>Menu tymczasowo niedostępne</li></ul></nav>';
     }
-    
+
     // Przygotowanie zapytania SQL z limitem dla optymalizacji
     $query = "SELECT alias, page_title, id 
              FROM page_list 
              WHERE status = 1 
              ORDER BY id ASC
              LIMIT 50";
-             
+
     // Wykonanie zapytania
     $result = $conn->query($query);
     if (!$result) {
         error_log("Błąd zapytania SQL w navbar.php: " . $conn->error);
         return '<nav><ul><li>Menu tymczasowo niedostępne</li></ul></nav>';
     }
-    
+
     // Inicjalizacja kontenera nawigacji
     $navItems = array();
-    
+
     // Pobranie i zabezpieczenie danych
     while ($row = $result->fetch_assoc()) {
         // Dodatkowa walidacja danych
         if (empty($row['alias']) || empty($row['page_title'])) {
             continue;
         }
-        
+
         $navItems[] = array(
             'alias' => htmlspecialchars(trim($row['alias']), ENT_QUOTES, 'UTF-8'),
             'title' => htmlspecialchars(trim($row['page_title']), ENT_QUOTES, 'UTF-8')
         );
     }
-    
+
     // Generowanie HTML dla nawigacji
     $nav = '<nav class="main-nav">';
     $nav .= '<ul class="nav-list">';
-    
+
     foreach ($navItems as $item) {
         $active = ($_GET['idp'] ?? 'glowna') == $item['alias'] ? ' active' : '';
         $icon = getNavIcon($item['alias']); // Dodajemy funkcję dla ikon
@@ -65,15 +66,16 @@ function loadNav() {
             $item['title']
         );
     }
-    
+
     $nav .= '</ul>';
     $nav .= '</nav>';
-    
+
     return $nav;
 }
 
 // Funkcja zwracająca odpowiednią ikonę dla danej strony
-function getNavIcon($alias) {
+function getNavIcon($alias)
+{
     $icons = [
         'glowna' => 'fas fa-home',
         'pierwszy' => 'fas fa-rocket',
@@ -86,22 +88,23 @@ function getNavIcon($alias) {
         'kontakt' => 'fas fa-envelope',
         'admin' => 'fas fa-user-shield',
     ];
-    
+
     return $icons[$alias] ?? 'fas fa-link'; // Domyślna ikona jeśli nie znaleziono
 }
 
-function loadAdminNav() {
+function loadAdminNav()
+{
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         return '';
     }
 
     $currentPage = $_GET['idp'] ?? '';
-    
+
     // Przycisk toggle dla panelu admina
     $adminNav = '<button class="admin-toggle" onclick="toggleAdminPanel()">
         <i class="fas fa-cog"></i> Panel Admina
     </button>';
-    
+
     $adminNav .= '<nav class="admin-navbar">
         <div class="admin-nav-container">
             <div class="admin-nav-brand">
@@ -128,7 +131,7 @@ function loadAdminNav() {
             </ul>
         </div>
     </nav>';
-    
+
     return $adminNav;
 }
 ?>

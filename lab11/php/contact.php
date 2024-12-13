@@ -1,4 +1,3 @@
-
 <?php
 //---------------------------------//
 //         Contact.php             //
@@ -9,8 +8,9 @@
 //  - Odzyskiwanie hasła          //
 //---------------------------------//
 
-class Contact {
-    
+class Contact
+{
+
     //---------------------------------//
     //      WyslijMailKontakt         //
     //---------------------------------//
@@ -20,48 +20,53 @@ class Contact {
     //  Zwraca:                       //
     //  - Komunikat o wysłaniu        //
     //---------------------------------//
-    
-    function WyslijMailKontakt($odbiorca) {
+
+    function WyslijMailKontakt($odbiorca)
+    {
         // Walidacja danych wejściowych
-        if (empty($_POST['email']) || 
-            empty($_POST['title']) || 
-            empty($_POST['content'])) {
+        if (
+            empty($_POST['email']) ||
+            empty($_POST['title']) ||
+            empty($_POST['content'])
+        ) {
             return $this->PokazKontakt();
         }
-        
+
         // Zabezpieczenie danych przed atakami
         $mail = array(
-            'sender'    => filter_var($_POST['email'], FILTER_SANITIZE_EMAIL),
-            'subject'   => htmlspecialchars($_POST['title'], ENT_QUOTES, 'UTF-8'),
-            'body'      => htmlspecialchars($_POST['content'], ENT_QUOTES, 'UTF-8'),
+            'sender' => filter_var($_POST['email'], FILTER_SANITIZE_EMAIL),
+            'subject' => htmlspecialchars($_POST['title'], ENT_QUOTES, 'UTF-8'),
+            'body' => htmlspecialchars($_POST['content'], ENT_QUOTES, 'UTF-8'),
             'recipient' => filter_var($odbiorca, FILTER_SANITIZE_EMAIL)
         );
-        
+
         // Walidacja adresu email
         if (!filter_var($mail['sender'], FILTER_VALIDATE_EMAIL)) {
             return '<div class="alert">Nieprawidłowy adres email!</div>';
         }
-        
+
         // Przygotowanie nagłówków
         $headers = array(
             'From: Formularz kontaktowy <' . $mail['sender'] . '>',
             'MIME-Version: 1.0',
             'Content-Type: text/plain; charset=utf-8'
         );
-        
+
         // Próba wysłania emaila
-        if (mail(
-            $mail['recipient'],
-            $mail['subject'],
-            $mail['body'],
-            implode("\n", $headers)
-        )) {
+        if (
+            mail(
+                $mail['recipient'],
+                $mail['subject'],
+                $mail['body'],
+                implode("\n", $headers)
+            )
+        ) {
             return '<div class="alert">Wiadomość została wysłana!</div>';
         } else {
             return '<div class="alert">Wystąpił błąd podczas wysyłania wiadomości.</div>';
         }
     }
-    
+
     //---------------------------------//
     //        PokazKontakt            //
     //---------------------------------//
@@ -70,11 +75,12 @@ class Contact {
     //  Zwraca:                       //
     //  - HTML formularza             //
     //---------------------------------//
-    
-    function PokazKontakt() {
+
+    function PokazKontakt()
+    {
         // Zabezpieczenie ścieżki formularza
         $action = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8');
-        
+
         return '
         <form method="post" action="' . $action . '">
             <table class="form_email">
@@ -114,7 +120,7 @@ class Contact {
                     </td>
                 </tr>
             </table>
-            <div class="buttons2">
+            <div class="button-haslo">
                 <a class="contact-button" 
                    href="?idp=haslo">
                     Odzyskiwanie hasła
@@ -122,7 +128,7 @@ class Contact {
             </div>
         </form>';
     }
-    
+
     //---------------------------------//
     //      PrzypomnijHaslo           //
     //---------------------------------//
@@ -133,45 +139,48 @@ class Contact {
     //  Zwraca:                       //
     //  - Komunikat o wysłaniu        //
     //---------------------------------//
-    
-    function PrzypomnijHaslo($odbiorca) {
+
+    function PrzypomnijHaslo($odbiorca)
+    {
         if (empty($_POST['email_recov'])) {
             return $this->PokazKontaktHaslo();
         }
-        
+
         // Zabezpieczenie danych przed atakami
         $mail = array(
-            'sender'    => filter_var($_POST['email_recov'], FILTER_SANITIZE_EMAIL),
-            'subject'   => 'Odzyskanie hasła',
-            'body'      => 'Twoje hasło to: test',
+            'sender' => filter_var($_POST['email_recov'], FILTER_SANITIZE_EMAIL),
+            'subject' => 'Odzyskanie hasła',
+            'body' => 'Twoje hasło to: test',
             'recipient' => filter_var($odbiorca, FILTER_SANITIZE_EMAIL)
         );
-        
+
         // Walidacja adresu email
         if (!filter_var($mail['sender'], FILTER_VALIDATE_EMAIL)) {
             return '<div class="alert">Nieprawidłowy adres email!</div>';
         }
-        
+
         // Przygotowanie nagłówków
         $headers = array(
             'From: Formularz odzyskiwania hasła <' . $mail['sender'] . '>',
             'MIME-Version: 1.0',
             'Content-Type: text/plain; charset=utf-8'
         );
-        
+
         // Próba wysłania emaila
-        if (mail(
-            $mail['recipient'],
-            $mail['subject'],
-            $mail['body'],
-            implode("\n", $headers)
-        )) {
+        if (
+            mail(
+                $mail['recipient'],
+                $mail['subject'],
+                $mail['body'],
+                implode("\n", $headers)
+            )
+        ) {
             return '<div class="alert">Hasło zostało wysłane na podany adres e-mail!</div>';
         } else {
             return '<div class="alert">Wystąpił błąd podczas wysyłania hasła.</div>';
         }
     }
-    
+
     //---------------------------------//
     //     PokazKontaktHaslo          //
     //---------------------------------//
@@ -180,11 +189,12 @@ class Contact {
     //  Zwraca:                       //
     //  - HTML formularza             //
     //---------------------------------//
-    
-    function PokazKontaktHaslo() {
+
+    function PokazKontaktHaslo()
+    {
         // Zabezpieczenie ścieżki formularza
         $action = htmlspecialchars($_SERVER['REQUEST_URI'], ENT_QUOTES, 'UTF-8');
-        
+
         return '
         <div class="form_email">
             <form method="post" action="' . $action . '">
