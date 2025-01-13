@@ -17,8 +17,8 @@
 class Version
 {
     // Stałe konfiguracyjne
-    private const VERSION = '1.12.0';
-    private const LAST_UPDATED = '30-12-2024';
+    private const VERSION = '1.13.0';
+    private const LAST_UPDATED = '13-01-2025';
     private const NR_INDEKSU = '169399';
 
     /**

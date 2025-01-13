@@ -125,6 +125,7 @@
 
 .product-form input[type="text"],
 .product-form input[type="number"],
+.product-form input[type="datetime-local"],
 .product-form input[type="file"],
 .product-form textarea {
   width: 100%;

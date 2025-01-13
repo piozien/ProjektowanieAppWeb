@@ -46,20 +46,35 @@ class Product
                   CASE 
                     WHEN c2.nazwa IS NOT NULL THEN CONCAT(c2.nazwa, ' → ', c1.nazwa)
                     ELSE c1.nazwa 
-                  END as kategoria_nazwa
+                  END as kategoria_nazwa,
+                  CAST(p.ilosc_dostepnych AS SIGNED) as ilosc_dostepnych,
+                  p.zdjecie,
+                  p.tytul,
+                  p.opis,
+                  p.cena_netto,
+                  p.podatek_vat,
+                  p.data_utworzenia,
+                  p.data_wygasniecia,
+                  p.status_dostepnosci,
+                  p.gabaryt_produkty
                   FROM product_list p
                   LEFT JOIN category_list c1 ON p.kategoria = c1.id
                   LEFT JOIN category_list c2 ON c1.matka = c2.id
                   ORDER BY p.data_utworzenia DESC";
         
+        error_log("SQL Query: " . $query);
         $result = $conn->query($query);
+
+        if (!$result) {
+            error_log("SQL Error: " . $conn->error);
+        }
 
         echo '<div class="product-panel">';
         echo '<div class="product-actions">';
         echo '<a href="?idp=nowy-produkt" class="new-product-btn">Dodaj nowy produkt</a>';
         echo '</div>';
 
-        if ($result->num_rows > 0) {
+        if ($result && $result->num_rows > 0) {
             echo '<table class="admin-table">
                     <tr>
                         <th>ID</th>
@@ -117,17 +132,17 @@ class Product
     function SprawdzDostepnosc($produkt)
     {
         // Sprawdzenie statusu dostępności
-        if ($produkt['status_dostepnosci'] == 0) {
+        if (!isset($produkt['status_dostepnosci']) || $produkt['status_dostepnosci'] != 1) {
             return false;
         }
 
         // Sprawdzenie ilości w magazynie
-        if ($produkt['ilosc_dostepnych'] <= 0) {
+        if (!isset($produkt['ilosc_dostepnych']) || intval($produkt['ilosc_dostepnych']) <= 0) {
             return false;
         }
 
         // Sprawdzenie daty wygaśnięcia
-        if ($produkt['data_wygasniecia'] !== null) {
+        if (isset($produkt['data_wygasniecia']) && $produkt['data_wygasniecia'] !== null) {
             $data_wygasniecia = new DateTime($produkt['data_wygasniecia']);
             $teraz = new DateTime();
             if ($data_wygasniecia < $teraz) {
@@ -155,10 +170,17 @@ class Product
             $ilosc = filter_input(INPUT_POST, 'ilosc_dostepnych', FILTER_VALIDATE_INT);
             $kategoria_id = filter_input(INPUT_POST, 'kategoria', FILTER_VALIDATE_INT);
             $gabaryt = filter_input(INPUT_POST, 'gabaryt_produkty', FILTER_SANITIZE_STRING);
+            $data_wygasniecia = filter_input(INPUT_POST, 'data_wygasniecia', FILTER_SANITIZE_STRING);
 
             if (!$tytul || !$cena_netto || !$podatek_vat || !$ilosc || !$kategoria_id || !$gabaryt) {
                 echo '<div class="error-message">Wszystkie pola są wymagane!</div>';
                 return;
+            }
+
+            // Walidacja daty wygaśnięcia
+            $data_wygasniecia_sql = null;
+            if (!empty($data_wygasniecia)) {
+                $data_wygasniecia_sql = date('Y-m-d H:i:s', strtotime($data_wygasniecia));
             }
 
             // Sprawdź czy kategoria istnieje
@@ -200,11 +222,12 @@ class Product
             }
 
             $query = "INSERT INTO product_list (tytul, opis, cena_netto, podatek_vat, ilosc_dostepnych, 
-                     kategoria, gabaryt_produkty, zdjecie) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                     kategoria, gabaryt_produkty, zdjecie, data_wygasniecia) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             $stmt = $conn->prepare($query);
             $stmt->bind_param(
-                "ssddisss",
+                "ssddissss",
                 $tytul,
                 $opis,
                 $cena_netto,
@@ -212,7 +235,8 @@ class Product
                 $ilosc,
                 $kategoria_id, 
                 $gabaryt,
-                $zdjecie_path
+                $zdjecie_path,
+                $data_wygasniecia_sql
             );
 
             if ($stmt->execute()) {
@@ -268,6 +292,9 @@ class Product
                 <label for="gabaryt_produkty">Gabaryt</label>
                 <input type="text" id="gabaryt_produkty" name="gabaryt_produkty" required>
                 
+                <label for="data_wygasniecia">Data wygaśnięcia (opcjonalne)</label>
+                <input type="datetime-local" id="data_wygasniecia" name="data_wygasniecia">
+                
                 <label for="zdjecie">Zdjęcie</label>
                 <input type="file" id="zdjecie" name="zdjecie" accept="image/*">
                 
@@ -300,6 +327,7 @@ class Product
             $ilosc = filter_input(INPUT_POST, 'ilosc_dostepnych', FILTER_VALIDATE_INT);
             $kategoria_id = filter_input(INPUT_POST, 'kategoria', FILTER_VALIDATE_INT);
             $gabaryt = filter_input(INPUT_POST, 'gabaryt_produkty', FILTER_SANITIZE_STRING);
+            $data_wygasniecia = filter_input(INPUT_POST, 'data_wygasniecia', FILTER_SANITIZE_STRING);
 
             if (!$tytul || !$cena_netto || !$podatek_vat || !isset($ilosc) || !$kategoria_id || !$gabaryt) {
                 echo '<div class="error-message">Wszystkie pola są wymagane!</div>';
@@ -360,35 +388,58 @@ class Product
                 }
             }
 
+            // Walidacja daty wygaśnięcia
+            $data_wygasniecia_sql = null;
+            if (!empty($data_wygasniecia)) {
+                $data_wygasniecia_sql = date('Y-m-d H:i:s', strtotime($data_wygasniecia));
+            }
+
             if ($zdjecie_path) {
-                $query = "UPDATE product_list SET tytul = ?, opis = ?, cena_netto = ?, podatek_vat = ?, 
-                         ilosc_dostepnych = ?, kategoria = ?, gabaryt_produkty = ?, zdjecie = ? WHERE id = ?";
+                $query = "UPDATE product_list SET 
+                         tytul = ?, 
+                         opis = ?, 
+                         cena_netto = ?, 
+                         podatek_vat = ?, 
+                         ilosc_dostepnych = ?, 
+                         kategoria = ?, 
+                         gabaryt_produkty = ?,
+                         data_wygasniecia = ?,
+                         zdjecie = ? 
+                         WHERE id = ?";
                 $stmt = $conn->prepare($query);
-                $stmt->bind_param(
-                    "ssddisssi",
-                    $tytul,
-                    $opis,
-                    $cena_netto,
-                    $podatek_vat,
-                    $ilosc,
-                    $kategoria_id,
+                $stmt->bind_param("ssddissssi", 
+                    $tytul, 
+                    $opis, 
+                    $cena_netto, 
+                    $podatek_vat, 
+                    $ilosc, 
+                    $kategoria_id, 
                     $gabaryt,
+                    $data_wygasniecia_sql,
                     $zdjecie_path,
                     $id
                 );
             } else {
-                $query = "UPDATE product_list SET tytul = ?, opis = ?, cena_netto = ?, podatek_vat = ?, 
-                         ilosc_dostepnych = ?, kategoria = ?, gabaryt_produkty = ? WHERE id = ?";
+                $query = "UPDATE product_list SET 
+                         tytul = ?, 
+                         opis = ?, 
+                         cena_netto = ?, 
+                         podatek_vat = ?, 
+                         ilosc_dostepnych = ?, 
+                         kategoria = ?, 
+                         gabaryt_produkty = ?,
+                         data_wygasniecia = ? 
+                         WHERE id = ?";
                 $stmt = $conn->prepare($query);
-                $stmt->bind_param(
-                    "ssddissi",
-                    $tytul,
-                    $opis,
-                    $cena_netto,
-                    $podatek_vat,
-                    $ilosc,
-                    $kategoria_id,
+                $stmt->bind_param("ssdisissi", 
+                    $tytul, 
+                    $opis, 
+                    $cena_netto, 
+                    $podatek_vat, 
+                    $ilosc, 
+                    $kategoria_id, 
                     $gabaryt,
+                    $data_wygasniecia_sql,
                     $id
                 );
             }
@@ -460,6 +511,10 @@ class Product
                 
                 <label for="gabaryt_produkty">Gabaryt</label>
                 <input type="text" id="gabaryt_produkty" name="gabaryt_produkty" value="' . htmlspecialchars($produkt['gabaryt_produkty']) . '" required>
+                
+                <label for="data_wygasniecia">Data wygaśnięcia (opcjonalne)</label>
+                <input type="datetime-local" id="data_wygasniecia" name="data_wygasniecia" 
+                       value="' . ($produkt['data_wygasniecia'] ? date('Y-m-d\TH:i', strtotime($produkt['data_wygasniecia'])) : '') . '">
                 
                 <label for="zdjecie">Aktualne zdjęcie:</label>';
 
