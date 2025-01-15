@@ -295,6 +295,10 @@ class Category {
             echo '<i class="fas ' . ($hasChildren ? 'fa-folder-open' : 'fa-folder') . '"></i> ';
             echo '<span class="category-name">' . htmlspecialchars($category['nazwa']) . '</span>';
             echo '<span class="category-id">(ID: ' . htmlspecialchars($category['id']) . ')</span>';
+            echo '<span class="action-cell-horizontal">';
+            echo '<a href="?idp=edytuj-kategorie&id=' . htmlspecialchars($category['id']) . '" class="action-edit" title="Edytuj kategorię"><i class="fas fa-edit"></i></a>';
+            echo '<a href="?idp=usun-kategorie&id=' . htmlspecialchars($category['id']) . '" class="action-delete" title="Usuń kategorię" onclick="return confirm(\'Czy na pewno chcesz usunąć tę kategorię?\');"><i class="fas fa-trash-alt"></i></a>';
+            echo '</span>';
             echo '</div>';
             
             if($hasChildren) {
