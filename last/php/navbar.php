@@ -2,8 +2,6 @@
 //----------------------------------------//
 //              navbar.php                 //
 //----------------------------------------//
-// Autor:                                 //
-// Data utworzenia: 2023                  //
 // Opis: Moduł nawigacji strony          //
 //   - Generowanie menu                   //
 //   - Pobieranie aktywnych stron         //

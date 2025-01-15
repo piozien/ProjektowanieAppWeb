@@ -178,7 +178,7 @@ class Store {
             $max_quantity = $product['ilosc_dostepnych'] - $cart_quantity;
             
             if ($max_quantity > 0) {
-                echo '<form method="post" class="add-to-cart-form">';
+                echo '<form method="post" class="add-to-cart-form" onsubmit="return addToCart(this, event)">';
                 echo '<input type="hidden" name="add_produkt" value="' . $product['id'] . '">';
                 echo '<div class="quantity-selector">';
                 echo '<select name="quantity" class="quantity-select">';
@@ -204,81 +204,104 @@ class Store {
 
     /**
      * Wyświetla zawartość koszyka
+     * @description Odpowiada za:
+     * - Wyświetlanie listy produktów w koszyku
+     * - Obliczanie sumy zamówienia z uwzględnieniem VAT
+     * - Obsługę przycisków zwiększania/zmniejszania ilości
+     * - Wyświetlanie komunikatu o pustym koszyku
+     * - Obsługę akcji koszyka (checkout, clear, add_one, remove_one)
      */
     function ShowCart() {
         global $conn;
         
+        // Kontener główny koszyka
         echo '<div class="cart-container">';
         echo '<h2 class="cart-title">Koszyk</h2>';
         echo '<a href="?idp=sklep" class="back-to-store">Powrót do sklepu</a>';
 
+        // Inicjalizacja zmiennych
         $total = 0;
         $has_items = false;
 
-        // Pobieranie produktów z koszyka
-        $query = "SELECT id, tytul, cena_netto, podatek_vat, ilosc_dostepnych, zdjecie 
-                 FROM product_list 
-                 WHERE id IN (" . implode(',', array_filter(array_map(function($key) {
-                     return substr($key, 3);
-                 }, array_filter(array_keys($_SESSION), function($key) {
-                     return strpos($key, 'id_') === 0;
-                 })))) . ")";
+        // Pobierz ID produktów z koszyka z sesji
+        // Filtruje klucze sesji zaczynające się od 'id_' i wyciąga z nich ID produktów
+        $cart_ids = array_filter(array_map(function($key) {
+            return substr($key, 3);
+        }, array_filter(array_keys($_SESSION), function($key) {
+            return strpos($key, 'id_') === 0;
+        })));
 
-        $result = $conn->query($query);
+        // Jeśli są produkty w koszyku
+        if (!empty($cart_ids)) {
+            // Pobierz szczegóły produktów z bazy danych
+            $query = "SELECT id, tytul, cena_netto, podatek_vat, ilosc_dostepnych, zdjecie 
+                     FROM product_list 
+                     WHERE id IN (" . implode(',', $cart_ids) . ")";
 
-        if ($result && $result->num_rows > 0) {
-            echo '<div class="cart-items">';
-            while ($product = $result->fetch_assoc()) {
-                if (isset($_SESSION['id_'.$product['id']]['ilosc'])) {
-                    $has_items = true;
-                    $quantity = $_SESSION['id_'.$product['id']]['ilosc'];
-                    $item_total = ($product['cena_netto'] * (1 + $product['podatek_vat']/100)) * $quantity;
-                    $total += $item_total;
+            $result = $conn->query($query);
 
-                    echo '<div class="cart-item">';
-                    // Zdjęcie produktu
-                    echo '<div class="cart-item-image">';
-                    if ($product['zdjecie'] && file_exists($product['zdjecie'])) {
-                        echo '<img src="' . $product['zdjecie'] . '" alt="' . htmlspecialchars($product['tytul']) . '">';
-                    } else {
-                        echo '<img src="images/products/no-image.png" alt="Brak zdjęcia">';
+            // Jeśli znaleziono produkty
+            if ($result && $result->num_rows > 0) {
+                echo '<div class="cart-items">';
+                while ($product = $result->fetch_assoc()) {
+                    // Sprawdź czy produkt jest nadal w koszyku (sesji)
+                    if (isset($_SESSION['id_'.$product['id']]['ilosc'])) {
+                        $has_items = true;
+                        $quantity = $_SESSION['id_'.$product['id']]['ilosc'];
+                        // Oblicz cenę całkowitą dla produktu (z VAT * ilość)
+                        $item_total = ($product['cena_netto'] * (1 + $product['podatek_vat']/100)) * $quantity;
+                        $total += $item_total;
+
+                        // Wyświetl produkt w koszyku
+                        echo '<div class="cart-item">';
+                        
+                        // Zdjęcie produktu
+                        echo '<div class="cart-item-image">';
+                        if ($product['zdjecie'] && file_exists($product['zdjecie'])) {
+                            echo '<img src="' . $product['zdjecie'] . '" alt="' . htmlspecialchars($product['tytul']) . '">';
+                        } else {
+                            echo '<img src="images/products/no-image.png" alt="Brak zdjęcia">';
+                        }
+                        echo '</div>';
+
+                        // Szczegóły produktu
+                        echo '<div class="cart-item-details">';
+                        echo '<h4 class="cart-item-title">' . htmlspecialchars($product['tytul']) . '</h4>';
+                        echo '<div class="cart-item-price">';
+                        echo '<span>Cena: ' . number_format($item_total, 2) . ' zł</span>';
+                        echo '</div>';
+                        
+                        // Przyciski do zmiany ilości
+                        echo '<div class="cart-item-quantity">';
+                        echo '<span>Ilość: <span class="quantity-value">' . $quantity . '</span></span>';
+                        // Przycisk + tylko jeśli jest dostępna większa ilość
+                        if ($quantity < $product['ilosc_dostepnych']) {
+                            echo '<button type="button" onclick="updateCartQuantity(' . $product['id'] . ', \'add\')" class="quantity-btn add">+</button>';
+                        }
+                        echo '<button type="button" onclick="updateCartQuantity(' . $product['id'] . ', \'remove\')" class="quantity-btn remove">-</button>';
+                        echo '</div>';
+                        
+                        echo '</div>'; // cart-item-details
+                        echo '</div>'; // cart-item
                     }
-                    echo '</div>';
+                }
+                echo '</div>'; // cart-items
 
-                    // Informacje o produkcie
-                    echo '<div class="cart-item-details">';
-                    echo '<h4 class="cart-item-title">' . htmlspecialchars($product['tytul']) . '</h4>';
-                    echo '<div class="cart-item-price">';
-                    echo '<span>Cena: ' . number_format($item_total, 2) . ' zł</span>';
+                // Wyświetl podsumowanie i przyciski akcji
+                if ($has_items) {
+                    echo '<div class="cart-summary">';
+                    echo '<div class="cart-total">Suma: ' . number_format($total, 2) . ' zł</div>';
+                    echo '<div class="cart-actions">';
+                    echo '<a href="?idp=sklep2&checkout=1" class="checkout-btn">Złóż zamówienie</a>';
+                    echo '<a href="?idp=sklep2&clear=1" class="clear-cart-btn">Wyczyść koszyk</a>';
                     echo '</div>';
-                    
-                    // Przyciski ilości
-                    echo '<div class="cart-item-quantity">';
-                    echo '<span>Ilość: ' . $quantity . '</span>';
-                    if ($quantity < $product['ilosc_dostepnych']) {
-                        echo '<a href="?idp=sklep2&add_one=' . $product['id'] . '" class="quantity-btn add">+</a>';
-                    }
-                    echo '<a href="?idp=sklep2&remove_one=' . $product['id'] . '" class="quantity-btn remove">-</a>';
                     echo '</div>';
-                    echo '</div>'; // cart-item-details
-                    echo '</div>'; // cart-item
                 }
             }
-            echo '</div>'; // cart-items
-
-            if ($has_items) {
-                echo '<div class="cart-summary">';
-                echo '<div class="cart-total">Suma: ' . number_format($total, 2) . ' zł</div>';
-                echo '<div class="cart-actions">';
-                echo '<a href="?idp=sklep2&checkout=1" class="checkout-btn">Złóż zamówienie</a>';
-                echo '<a href="?idp=sklep2&clear=1" class="clear-cart-btn">Wyczyść koszyk</a>';
-                echo '</div>';
-                echo '</div>';
-            }
-        }
-
-        if (!$has_items) {
+        } else {
+            // Wyświetl komunikat o pustym koszyku
             echo '<div class="empty-cart">';
+            echo '<i class="fas fa-shopping-cart"></i>';
             echo '<p>Twój koszyk jest pusty</p>';
             echo '<a href="?idp=sklep" class="continue-shopping">Kontynuuj zakupy</a>';
             echo '</div>';

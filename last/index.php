@@ -40,6 +40,7 @@ include('php/store.php');
 
     <!-- JavaScript -->
     <script src="javascript/admin-panel.js" defer></script>
+    <script src="javascript/cart.js" defer></script>
 
     <?php
     //---------------------------------//
@@ -96,7 +97,7 @@ include('php/store.php');
     <?php
     // Wyświetl navbar admina tylko dla stron administracyjnych
     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
-        $adminPages = ['admin', 'edit', 'delete', 'create', 'haslo', 'kategorie', 'edytuj-kategorie', 'nowa-kategoria', 'usun-kategorie', 'produkty', 'nowy-produkt', 'edytuj-produkt', 'usun-produkt'];
+        $adminPages = ['admin', 'edit', 'delete', 'create', 'haslo', 'kategorie', 'edytuj-kategorie', 'nowa-kategoria', 'usun-kategorie', 'produkty', 'nowy-produkt', 'edytuj-produkt', 'usun-produkt', 'sklep'];
         if (in_array($_GET['idp'] ?? '', $adminPages)) {
             echo loadAdminNav();
         }
